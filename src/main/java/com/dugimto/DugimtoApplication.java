@@ -1,4 +1,4 @@
-package com.dugimto.dugimto;
+package com.dugimto;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
