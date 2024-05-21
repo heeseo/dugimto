@@ -2,6 +2,7 @@ package com.dugimto.service;
 
 import com.dugimto.domain.Game;
 import com.dugimto.domain.GameType;
+import com.dugimto.exception.GameNotFoundException;
 import com.dugimto.repository.GameRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -66,5 +67,27 @@ class GameServiceTest {
         assertThat(allGames).isNotNull();
         assertThat(allGames).hasSize(2);
         assertThat(allGames).containsExactly(game1, game2);
+    }
+
+    @Test
+    void findGameById() {
+        Map<String, Double> oddsMap = new HashMap<>();
+        oddsMap.put("win", 2.0);
+        oddsMap.put("draw", 3.0);
+        oddsMap.put("lose", 4.0);
+
+        Game game1 = new Game("test game1", GameType.FOOTBALL, LocalDateTime.now().plusHours(1), oddsMap);
+        gameRepository.save(game1);
+
+
+        assertThatNoException().isThrownBy(() -> gameService.findGameById(game1.getId()));
+        Game foundGame = gameService.findGameById(game1.getId());
+        assertThat(foundGame.getId()).isEqualTo(game1.getId());
+        assertThat(foundGame.getDetail()).isEqualTo("test game1");
+        assertThat(foundGame.getGameType()).isEqualTo(GameType.FOOTBALL);
+        assertThat(foundGame.getStartTime()).isEqualToIgnoringSeconds(LocalDateTime.now().plusHours(1));
+        assertThat(foundGame.getOddsMap()).containsEntry("win", 2.0); // Check odds for winning
+        assertThat(foundGame.getOddsMap()).containsEntry("draw", 3.0); // Check odds for draw
+        assertThat(foundGame.getOddsMap()).containsEntry("lose", 4.0); // Check odds for losing
     }
 }
