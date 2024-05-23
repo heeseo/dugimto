@@ -36,7 +36,7 @@ class GameServiceTest {
         oddsMap.put("draw", 3.0); // Odds for draw
         oddsMap.put("lose", 4.0); // Odds for losing
 
-        Long gameId = gameService.createGame("test game", GameType.FOOTBALL, LocalDateTime.now().plusHours(1), oddsMap);
+        Long gameId = gameService.createGame(new Game("test game", GameType.FOOTBALL, LocalDateTime.now().plusHours(1), oddsMap));
 
         Optional<Game> gameFound = gameRepository.findById(gameId);
 

@@ -21,8 +21,8 @@ public class GameService {
     private final GameRepository gameRepository;
 
     @Transactional
-    public Long createGame(String detail, GameType gameType, LocalDateTime startTime, Map<String, Double> oddsMap) {
-        Game game = new Game(detail, gameType, startTime, oddsMap);
+    public Long createGame(Game game) {
+//        Game game = new Game(detail, gameType, startTime, oddsMap);
         gameRepository.save(game);
         return game.getId();
     }
