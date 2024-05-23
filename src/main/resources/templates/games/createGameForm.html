@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create Game</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+    <h1>Create a New Game</h1>
+</header>
+<main>
+    <form th:action="@{/games/new}" th:object="${gameForm}" method="post">
+        <div>
+            <label for="detail">Game Detail:</label>
+            <input type="text" id="detail" th:field="*{detail}" required/>
+        </div>
+        <div>
+            <label for="gameType">Game Type:</label>
+            <select id="gameType" th:field="*{gameType}" required>
+                <option th:each="gameType : ${T(com.dugimto.domain.GameType).values()}"
+                        th:value="${gameType}" th:text="${gameType}">Game Type</option>
+            </select>
+        </div>
+        <div>
+            <label for="startTime">Start Time:</label>
+            <input type="datetime-local" id="startTime" th:field="*{startTime}" required/>
+        </div>
+        <div>
+            <label>Odds:</label>
+            <div>
+                <label for="win">Win:</label>
+                <input type="number" step="0.01" id="win" th:field="*{oddsMap['win']}" required/>
+            </div>
+            <div>
+                <label for="draw">Draw:</label>
+                <input type="number" step="0.01" id="draw" th:field="*{oddsMap['draw']}" required/>
+            </div>
+            <div>
+                <label for="lose">Lose:</label>
+                <input type="number" step="0.01" id="lose" th:field="*{oddsMap['lose']}" required/>
+            </div>
+        </div>
+        <div>
+            <button type="submit">Create Game</button>
+        </div>
+    </form>
+</main>
+<footer>
+    <p>&copy; 2024 Dugimto</p>
+</footer>
+</body>
+</html>
