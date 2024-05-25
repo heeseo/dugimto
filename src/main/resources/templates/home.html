@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title}">Home Page</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<header>
+    <h1 th:text="${title}">Home Page</h1>
+    <div id="logout-button">
+        <form th:action="@{/logout}" method="post">
+            <button type="submit">Logout</button>
+        </form>
+    </div>
+</header>
+<main>
+    <div id="content">
+        <div id="games-list">
+            <h2>Games</h2>
+            <ul>
+                <li th:each="game : ${games}">
+                    <span th:text="${game.detail}">Game Detail</span>
+                    <div th:each="entry : ${game.oddsMap.entrySet()}">
+                        <button th:text="${entry.key} + ': ' + ${entry.value}"
+                                th:attr="data-bettype=${entry.key},data-odds=${entry.value}"
+                                onclick="selectBet(this)">
+                        </button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div id="selected-bets">
+            <h2>Selected Bets</h2>
+            <ul id="bets-list"></ul>
+            <button onclick="placeBets()">Place Bet</button>
+        </div>
+    </div>
+</main>
+<footer>
+    <p>&copy; 2024 Dugimto</p>
+</footer>
+<script>
+    function selectBet(button) {
+        var gameDetail = $(button).closest('li').find('span').text();
+        var betType = $(button).data('bettype');
+        var odds = $(button).data('odds');
+        var betId = gameDetail.replace(/\s+/g, '-') + '-' + betType;
+
+        if ($("#" + betId).length === 0) {
+            var betHtml = `<li id="${betId}">
+                            ${gameDetail} - ${betType}: ${odds}
+                            <input type="number" placeholder="Amount" />
+                            <button onclick="removeBet('${betId}')">Remove</button>
+                           </li>`;
+            $("#bets-list").append(betHtml);
+        }
+    }
+
+    function removeBet(betId) {
+        $("#" + betId).remove();
+    }
+
+    function placeBets() {
+        var bets = [];
+        $("#bets-list li").each(function() {
+            var gameDetail = $(this).attr("id").split('-')[0];
+            var betType = $(this).attr("id").split('-')[1];
+            var amount = $(this).find("input").val();
+            var odds = $(this).text().split(": ")[1].split(" ")[0]; // Get odds from text content
+
+            bets.push({
+                gameDetail: gameDetail,
+                betType: betType,
+                amount: amount,
+                odds: odds
+            });
+        });
+
+        console.log(bets); // For debugging purposes
+
+        // Example of sending the bets to a backend endpoint
+        $.ajax({
+            url: '/bets/new',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(bets),
+            success: function(response) {
+                alert('Bets placed successfully!');
+                // Clear the bets list
+                $("#bets-list").empty();
+            },
+            error: function(error) {
+                alert('Error placing bets: ' + error.responseText);
+            }
+        });
+    }
+</script>
+</body>
+</html>

@@ -5,6 +5,7 @@ import com.dugimto.domain.Game;
 import com.dugimto.domain.GameType;
 import com.dugimto.dto.GameForm;
 import com.dugimto.service.GameService;
+import com.dugimto.service.UserDetailService;
 import org.apache.catalina.security.SecurityConfig;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,6 +36,8 @@ class GameControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @MockBean
+    UserDetailService userDetailService;
     @MockBean
     private GameService gameService;
 

@@ -1,6 +1,7 @@
 package com.dugimto.service;
 
 import com.dugimto.domain.User;
+import com.dugimto.dto.SignUpRequest;
 import com.dugimto.exception.UserNotFoundException;
 import com.dugimto.repository.UserRepository;
 import org.assertj.core.api.Assertions;
@@ -35,15 +36,22 @@ class UserServiceTest {
     @Test
     void register() {
         //arrange
-        Long userId = userService.register(user);
+        SignUpRequest dto = new SignUpRequest();
+        dto.setEmail("testuser@example.com");
+        dto.setPassword("password");
+        dto.setUsername("testuser");
+
+        Long userId = userService.register(dto);
 
         //act
         User foundUser = userRepository.findById(userId).orElse(null);
 
         //assert
         assertThat(foundUser).isNotNull();
-        assertThat(foundUser).isEqualTo(user);
-        assertThat(userId).isEqualTo(user.getId());
+        assertThat(foundUser.getEmail()).isEqualTo(dto.getEmail());
+        assertThat(foundUser.getUsername()).isEqualTo(dto.getUsername());
+        assertThat(foundUser.getPassword()).isNotEqualTo(dto.getPassword()); //encrypted
+        assertThat(foundUser.getId()).isEqualTo(userId);
     }
 
     @Test
