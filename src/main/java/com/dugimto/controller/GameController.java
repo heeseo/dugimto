@@ -23,8 +23,8 @@ public class GameController {
 
     @PostMapping("/games/new")
     public String createGame(GameForm gameForm) {
-        Game game = gameForm.toGame();
-        gameService.createGame(game);
+//        Game game = gameForm.toGame();
+        gameService.createGame(gameForm);
         return "redirect:/";
     }
 }

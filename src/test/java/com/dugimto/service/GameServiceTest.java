@@ -2,6 +2,7 @@ package com.dugimto.service;
 
 import com.dugimto.domain.Game;
 import com.dugimto.domain.GameType;
+import com.dugimto.dto.GameForm;
 import com.dugimto.exception.GameNotFoundException;
 import com.dugimto.repository.GameRepository;
 import org.assertj.core.api.Assertions;
@@ -30,13 +31,8 @@ class GameServiceTest {
     private GameService gameService;
     @Test
     void createGame() {
-
-        Map<String, Double> oddsMap = new HashMap<>();
-        oddsMap.put("win", 2.0); // Odds for winning
-        oddsMap.put("draw", 3.0); // Odds for draw
-        oddsMap.put("lose", 4.0); // Odds for losing
-
-        Long gameId = gameService.createGame(new Game("test game", GameType.FOOTBALL, LocalDateTime.now().plusHours(1), oddsMap));
+        GameForm gameForm = getGameForm();
+        Long gameId = gameService.createGame(gameForm);
 
         Optional<Game> gameFound = gameRepository.findById(gameId);
 
@@ -47,6 +43,20 @@ class GameServiceTest {
         assertThat(gameFound.get().getOddsMap()).containsEntry("win", 2.0); // Check odds for winning
         assertThat(gameFound.get().getOddsMap()).containsEntry("draw", 3.0); // Check odds for draw
         assertThat(gameFound.get().getOddsMap()).containsEntry("lose", 4.0); // Check odds for losing
+    }
+
+    private static GameForm getGameForm() {
+        Map<String, Double> oddsMap = new HashMap<>();
+        oddsMap.put("win", 2.0); // Odds for winning
+        oddsMap.put("draw", 3.0); // Odds for draw
+        oddsMap.put("lose", 4.0); // Odds for losing
+
+        GameForm gameForm = new GameForm();
+        gameForm.setDetail("test game");
+        gameForm.setGameType(GameType.FOOTBALL);
+        gameForm.setStartTime(LocalDateTime.now().plusHours(1));
+        gameForm.setOddsMap(oddsMap);
+        return gameForm;
     }
 
     @Test

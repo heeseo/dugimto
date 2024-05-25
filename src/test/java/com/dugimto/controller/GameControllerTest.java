@@ -59,7 +59,7 @@ class GameControllerTest {
                 .andExpect(redirectedUrl("/"));
 
         // Verify that the service was called
-        verify(gameService, times(1)).createGame(any(Game.class));
+        verify(gameService, times(1)).createGame(any(GameForm.class));
     }
 
     private static GameForm getGameForm() {

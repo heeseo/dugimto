@@ -2,6 +2,7 @@ package com.dugimto.service;
 
 import com.dugimto.domain.Game;
 import com.dugimto.domain.GameType;
+import com.dugimto.dto.GameForm;
 import com.dugimto.exception.GameNotFoundException;
 import com.dugimto.repository.GameRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +22,8 @@ public class GameService {
     private final GameRepository gameRepository;
 
     @Transactional
-    public Long createGame(Game game) {
-//        Game game = new Game(detail, gameType, startTime, oddsMap);
+    public Long createGame(GameForm gameForm) {
+        Game game = gameForm.toGame();
         gameRepository.save(game);
         return game.getId();
     }
