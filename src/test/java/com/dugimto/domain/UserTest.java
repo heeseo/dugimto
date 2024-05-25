@@ -12,7 +12,7 @@ class UserTest {
 
     @BeforeEach
     public void setUp() {
-        user = new User("testuser", "test@example.com", "password123");
+        user = new User("testuser", "test@example.com", "password123", UserRole.USER);
     }
 
     @Test

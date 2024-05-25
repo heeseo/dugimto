@@ -45,6 +45,6 @@ class BetTest {
     }
 
     private static User getTestUser() {
-        return new User("testUser", "test@example.com", "password");
+        return new User("testUser", "test@example.com", "password", UserRole.USER);
     }
 }

@@ -39,7 +39,7 @@ class BetServiceTest {
 
     @BeforeEach
     void setUp() {
-        testUser = new User("testuser", "testuser@example.com", "password");
+        testUser = new User("testuser", "testuser@example.com", "password", UserRole.USER);
 
         Map<String, Double> oddsMap = new HashMap<>();
         oddsMap.put("WIN", 2.0); // Odds for winning

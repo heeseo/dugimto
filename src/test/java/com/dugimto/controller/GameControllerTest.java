@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
@@ -43,6 +44,7 @@ class GameControllerTest {
 
     @Test
     @DisplayName("ShouldReturnCreateGameForm")
+    @WithMockUser(roles = {"ADMIN"})
     void createGameForm() throws Exception {
         mockMvc.perform(get("/games/new"))
                 .andExpect(status().isOk())
@@ -51,6 +53,7 @@ class GameControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     @DisplayName("ShouldRedirectToHome")
     void createGame() throws Exception {
         GameForm gameForm = getGameForm();

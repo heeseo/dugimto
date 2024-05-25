@@ -1,6 +1,7 @@
 package com.dugimto.service;
 
 import com.dugimto.domain.User;
+import com.dugimto.domain.UserRole;
 import com.dugimto.dto.SignUpRequest;
 import com.dugimto.exception.UserNotFoundException;
 import com.dugimto.repository.UserRepository;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -19,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
+@ActiveProfiles("test")
 class UserServiceTest {
 
     @Autowired
@@ -30,7 +33,7 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-        user = new User("testuser", "testuser@example.com", "password");
+        user = new User("testuser", "testuser@example.com", "password", UserRole.USER);
     }
 
     @Test
