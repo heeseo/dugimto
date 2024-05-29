@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -27,9 +26,11 @@ public class Bet {
     private Game game;
 
     @Enumerated(EnumType.STRING)
-    private BetType betType;
-    private Long amount;
-    private double odds;
+    private MarketType marketType;
+
+    private String prediction;
+    private Long stake;
+    private Double odds;
 
     @CreationTimestamp
     @Column(name = "created_at")
@@ -37,13 +38,14 @@ public class Bet {
     private boolean isSettled;
 
     @Enumerated(EnumType.STRING)
-    private Outcome outcome = Outcome.PENDING;
+    private Result result = Result.PENDING;
 
-    public Bet(User user, Game game, BetType betType, Long amount) {
+    public Bet(User user, Game game, Long stake, MarketType marketType, Outcome outcome) {
         this.user = user;
         this.game = game;
-        this.betType = betType;
-        this.amount = amount;
-        this.odds = game.getOddsMap().get(betType.toString());
+        this.marketType = marketType;
+        this.stake = stake;
+        this.prediction = outcome.getName();
+        this.odds = outcome.getPrice();
     }
 }
