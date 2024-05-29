@@ -4,6 +4,8 @@
     <title th:text="${title}">Home Page</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 <body>
 <header>
@@ -20,13 +22,21 @@
             <h2>Games</h2>
             <ul>
                 <li th:each="game : ${games}">
-                    <span th:text="${game.detail}">Game Detail</span>
-                    <div th:each="entry : ${game.oddsMap.entrySet()}">
-                        <button th:text="${entry.key} + ': ' + ${entry.value}"
-                                th:attr="data-bettype=${entry.key},data-odds=${entry.value}"
-                                onclick="selectBet(this)">
-                        </button>
-                    </div>
+                    <h2 th:text="${game.gameTitle}">League</h2>
+                    <span th:text="${game.homeTeam + ' vs ' + game.awayTeam}">Game Detail</span>
+                    <ul>
+                        <li th:each="oddsEntry : ${game.oddsEntries}">
+                            <span th:text="${oddsEntry.marketType}">Market Type</span>
+                            <ul>
+                                <li th:each="outcome : ${oddsEntry.outcomes}">
+                                    <button th:text="${outcome.name} + ': ' + ${outcome.price}"
+                                            th:attr="data-bettype=${oddsEntry.marketType}, data-odds=${outcome.price}, data-gameId=${game.id}, data-game-detail=${game.homeTeam + ' vs ' + game.awayTeam}, data-outcome-name=${outcome.name}"
+                                            onclick="selectBet(this)">
+                                    </button>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
                 </li>
             </ul>
         </div>
@@ -41,15 +51,25 @@
     <p>&copy; 2024 Dugimto</p>
 </footer>
 <script>
+    function getCsrfToken() {
+        return $('meta[name="_csrf"]').attr('content');
+    }
+
+    function getCsrfHeader() {
+        return $('meta[name="_csrf_header"]').attr('content');
+    }
+
     function selectBet(button) {
-        var gameDetail = $(button).closest('li').find('span').text();
+        var gameDetail = $(button).data('game-detail');
         var betType = $(button).data('bettype');
         var odds = $(button).data('odds');
-        var betId = gameDetail.replace(/\s+/g, '-') + '-' + betType;
+        var outcomeName = $(button).data('outcome-name');
+        var gameId = $(button).data('gameid');
+        var betId = gameDetail.replace(/\s+/g, '-') + '-' + outcomeName.replace(/\s+/g, '-');
 
         if ($("#" + betId).length === 0) {
-            var betHtml = `<li id="${betId}">
-                            ${gameDetail} - ${betType}: ${odds}
+            var betHtml = `<li id="${betId}" data-gameid="${gameId}" data-game-detail="${gameDetail}" data-bettype="${betType}" data-outcome-name="${outcomeName}" data-odds="${odds}">
+                            ${gameDetail} - ${betType}: ${outcomeName} - ${odds}
                             <input type="number" placeholder="Amount" />
                             <button onclick="removeBet('${betId}')">Remove</button>
                            </li>`;
@@ -57,44 +77,52 @@
         }
     }
 
-    function removeBet(betId) {
-        $("#" + betId).remove();
-    }
+function removeBet(betId) {b
+    $("#" + betId).remove();
+}
 
-    function placeBets() {
-        var bets = [];
-        $("#bets-list li").each(function() {
-            var gameDetail = $(this).attr("id").split('-')[0];
-            var betType = $(this).attr("id").split('-')[1];
-            var amount = $(this).find("input").val();
-            var odds = $(this).text().split(": ")[1].split(" ")[0]; // Get odds from text content
+function placeBets() {
+    var bets = [];
+    $("#bets-list li").each(function() {
+        var gameId = $(this).data('gameid');
+        var gameDetail = $(this).data('game-detail');
+        var betType = $(this).data('bettype');
+        var outcomeName = $(this).data('outcome-name');
+        var amount = $(this).find("input").val();
+        var odds = $(this).data('odds');
 
-            bets.push({
-                gameDetail: gameDetail,
-                betType: betType,
-                amount: amount,
-                odds: odds
-            });
+        bets.push({
+            gameId: gameId,
+            gameDetail: gameDetail,
+            marketType: betType,
+            prediction: outcomeName,
+            stake: amount,
+            odds: odds
         });
+    });
 
-        console.log(bets); // For debugging purposes
+    console.log(bets); // For debugging purposes
 
-        // Example of sending the bets to a backend endpoint
-        $.ajax({
-            url: '/bets/new',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(bets),
-            success: function(response) {
-                alert('Bets placed successfully!');
-                // Clear the bets list
-                $("#bets-list").empty();
-            },
-            error: function(error) {
-                alert('Error placing bets: ' + error.responseText);
-            }
-        });
-    }
+    // Example of sending the bets to a backend endpoint
+    $.ajax({
+        url: '/bets/new',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(bets),
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader(getCsrfHeader(), getCsrfToken());
+        },
+        success: function(response) {
+            alert('Bets placed successfully!');
+            // Clear the bets list
+            $("#bets-list").empty();
+        },
+        error: function(error) {
+            alert('Error placing bets: ' + error.responseText);
+        }
+    });
+}
 </script>
 </body>
 </html>
+
