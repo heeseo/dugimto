@@ -1,13 +1,13 @@
 package com.dugimto.service;
 
-import com.dugimto.domain.Bet;
-import com.dugimto.domain.BetType;
-import com.dugimto.domain.Game;
-import com.dugimto.domain.User;
+import com.dugimto.domain.*;
+import com.dugimto.dto.BetDto;
 import com.dugimto.exception.BetNotFoundException;
 import com.dugimto.repository.BetRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,14 +22,33 @@ public class BetService {
     private final BetRepository betRepository;
     private final UserService userService;
     private final GameService gameService;
+    private final OutcomeService outcomeService;
 
     @Transactional
-    public Long createBet(Long userId, Long gameId, BetType betType, Long amount) {
+    public Long placeBet(Long userId, Long gameId, Long outcomeId, Long stake, MarketType marketType) {
         User user = userService.findOne(userId);
         Game game = gameService.findGameById(gameId);
-        Bet bet = new Bet(user, game, betType, amount);
+
+        Outcome outcome = outcomeService.findOutcomeById(outcomeId);
+
+        Bet bet = new Bet(user, game, stake, marketType, outcome.getName(), outcome.getPrice());
         betRepository.save(bet);
         return bet.getId();
+    }
+
+    @Transactional
+    public void placeBets(List<BetDto> bets) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findByEmail(authentication.getName());
+
+        bets.forEach(betDto -> {
+            Game game = gameService.findGameById(betDto.getGameId());
+            //odd validation to be implemented
+
+            Bet bet = new Bet(user, game, betDto.getStake(), betDto.getMarketType(), betDto.getPrediction(), betDto.getOdds());
+            betRepository.save(bet);
+        });
+
     }
 
     public Bet findBetById(Long id) {
@@ -39,4 +58,5 @@ public class BetService {
     public List<Bet> findAllBets() {
         return betRepository.findAll();
     }
+
 }

@@ -40,12 +40,12 @@ public class Bet {
     @Enumerated(EnumType.STRING)
     private Result result = Result.PENDING;
 
-    public Bet(User user, Game game, Long stake, MarketType marketType, Outcome outcome) {
+    public Bet(User user, Game game, Long stake, MarketType marketType, String prediction, Double odds) {
         this.user = user;
         this.game = game;
         this.marketType = marketType;
         this.stake = stake;
-        this.prediction = outcome.getName();
-        this.odds = outcome.getPrice();
+        this.prediction = prediction;
+        this.odds = odds;
     }
 }

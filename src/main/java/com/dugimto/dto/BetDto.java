@@ -1,14 +1,8 @@
 package com.dugimto.dto;
 
-import com.dugimto.domain.Game;
-import com.dugimto.domain.MarketType;
-import com.dugimto.domain.Result;
-import com.dugimto.domain.User;
+import com.dugimto.domain.*;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
-
-import java.time.LocalDateTime;
 
 @Data
 public class BetDto {
