@@ -5,6 +5,7 @@ import com.dugimto.domain.Game;
 import com.dugimto.domain.GameType;
 import com.dugimto.dto.GameForm;
 import com.dugimto.service.GameService;
+import com.dugimto.service.OddsService;
 import com.dugimto.service.UserDetailService;
 import org.apache.catalina.security.SecurityConfig;
 import org.junit.jupiter.api.DisplayName;
@@ -41,6 +42,8 @@ class GameControllerTest {
     UserDetailService userDetailService;
     @MockBean
     private GameService gameService;
+    @MockBean
+    private OddsService oddsService;
 
     @Test
     @DisplayName("ShouldReturnCreateGameForm")
@@ -70,14 +73,9 @@ class GameControllerTest {
 
     private static GameForm getGameForm() {
         GameForm gameForm = new GameForm();
-        gameForm.setDetail("MCI vs WHU");
         gameForm.setGameType(GameType.FOOTBALL);
         gameForm.setStartTime(LocalDateTime.now().plusHours(1));
-        Map<String, Double> oddsMap = new HashMap<>();
-        oddsMap.put("win", 2.0);
-        oddsMap.put("draw", 3.0);
-        oddsMap.put("lose", 4.0);
-        gameForm.setOddsMap(oddsMap);
+
         return gameForm;
     }
 }
