@@ -15,22 +15,20 @@ class GameTest {
     @Test
     public void testGameCreation() throws Exception {
         //arrange
-        Map<String, Double> oddsMap = new HashMap<>();
-        oddsMap.put("win", 2.0); // Odds for winning
-        oddsMap.put("draw", 3.0); // Odds for draw
-        oddsMap.put("lose", 4.0); // Odds for losing
 
         //act
-        Game game = new Game("MCI vs WHU", GameType.FOOTBALL, LocalDateTime.now().plusHours(1), oddsMap);
+        Game game = new Game(GameType.FOOTBALL, "EPL","Man utd", "Man city", LocalDateTime.now().plusHours(1));
 
         //assert
         assertThat(game).isNotNull();
-        assertThat(game.getDetail()).isEqualTo("MCI vs WHU");
+        assertThat(game.getGameTitle()).isEqualTo("EPL");
+        assertThat(game.getHomeTeam()).isEqualTo("Man utd");
+        assertThat(game.getAwayTeam()).isEqualTo("Man city");
         assertThat(game.getGameType()).isEqualTo(GameType.FOOTBALL);
+        assertThat(game.getGameStatus()).isEqualTo(GameStatus.CREATED);
         assertThat(game.getStartTime()).isEqualToIgnoringSeconds(LocalDateTime.now().plusHours(1)); // Adjusted for testability
-        assertThat(game.getOddsMap()).containsEntry("win", 2.0); // Check odds for winning
-        assertThat(game.getOddsMap()).containsEntry("draw", 3.0); // Check odds for draw
-        assertThat(game.getOddsMap()).containsEntry("lose", 4.0); // Check odds for losing
+        assertThat(game.getOddsEntries()).isEmpty();
+
     }
 
 }

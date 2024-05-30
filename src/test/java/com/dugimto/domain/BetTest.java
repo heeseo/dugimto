@@ -3,6 +3,7 @@ package com.dugimto.domain;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,29 +19,30 @@ class BetTest {
         BetType testBetType = BetType.WIN;
         Long testAmount = 100L;
 
+        // Initialize oddsEntry
+        OddsEntry oddsEntry = new OddsEntry(MarketType.MATCH_RESULT, testGame);
+
+        // Initialize outcomes
+        Outcome outcome1 = new Outcome(oddsEntry, "home_team", 1.5);
+
         //act
-        Bet bet = new Bet(testUser, testGame, testBetType, testAmount);
+        Bet bet = new Bet(testUser, testGame, testAmount, MarketType.MATCH_RESULT, outcome1.getName(), outcome1.getPrice());
 
         //assert
         assertThat(bet).isNotNull();
         assertThat(bet.getUser()).isEqualTo(testUser);
         assertThat(bet.getGame()).isEqualTo(testGame);
-        assertThat(bet.getBetType()).isEqualTo(testBetType);
-        assertThat(bet.getAmount()).isEqualTo(testAmount);
-        assertThat(bet.getOdds()).isEqualTo(2.0); // Check the odds corresponding to BetType
+        assertThat(bet.getPrediction()).isEqualTo(outcome1.getName());
+        assertThat(bet.getStake()).isEqualTo(testAmount);
+        assertThat(bet.getOdds()).isEqualTo(1.5); // Check the odds corresponding to BetType
         assertThat(bet.isSettled()).isFalse();
         assertThat(bet.getCreatedAt()).isNull();
-        assertThat(bet.getOutcome()).isEqualTo(Outcome.PENDING); // Assuming outcome is null initially
+        assertThat(bet.getResult()).isEqualTo(Result.PENDING); // Assuming outcome is null initially
 
     }
 
     private static Game getGame() {
-        Map<String, Double> oddsMap = new HashMap<>();
-        oddsMap.put("WIN", 2.0);
-        oddsMap.put("DRAW", 3.0);
-        oddsMap.put("LOSE", 4.0);
-
-        Game testGame = new Game("MCI vs WHU", GameType.FOOTBALL, LocalDateTime.now().plusHours(1), oddsMap);
+        Game testGame = new Game(GameType.FOOTBALL, "EPL","Man utd", "Man city", LocalDateTime.now().plusHours(1));
         return testGame;
     }
 
