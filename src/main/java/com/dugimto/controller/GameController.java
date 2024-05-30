@@ -1,12 +1,8 @@
 package com.dugimto.controller;
 
-import com.dugimto.domain.Game;
-import com.dugimto.domain.GameType;
 import com.dugimto.dto.GameForm;
-import com.dugimto.dto.OddsEntryDto;
-import com.dugimto.dto.OutcomeDto;
 import com.dugimto.service.GameService;
-import com.dugimto.service.OddsService;
+import com.dugimto.service.OddsApiService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,15 +11,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.time.LocalDateTime;
-
 @Controller
 @RequiredArgsConstructor
 @Slf4j
 public class GameController {
 
     private final GameService gameService;
-    private final OddsService oddsService;
+    private final OddsApiService oddsApiService;
 
     @GetMapping("/games/new")
     public String createGameForm(Model model) {
@@ -41,7 +35,7 @@ public class GameController {
 
     @GetMapping("/games/new/odds")
     public String getOdds(Model model) {
-        String odds = oddsService.fetchUpcomingAndLiveOdds();
+        String odds = oddsApiService.fetchUpcomingAndLiveOdds();
         log.info("fetched odds: {}", odds);
         return "redirect:/";
     }

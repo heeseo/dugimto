@@ -2,13 +2,11 @@ package com.dugimto.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.util.UriComponentsBuilder;
 
 
 @Service
-public class OddsService {
+public class OddsApiService {
 
     @Value("${odds.api.key}")
     private String apiKey;
