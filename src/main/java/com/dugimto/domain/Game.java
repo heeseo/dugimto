@@ -28,7 +28,7 @@ public class Game {
     private String awayTeam;
     private String detail;
 
-    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "game")
     private List<Bet> bets = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
