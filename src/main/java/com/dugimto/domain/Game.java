@@ -1,9 +1,7 @@
 package com.dugimto.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -20,6 +18,9 @@ public class Game {
     @Id @GeneratedValue
     @Column(name = "game_id")
     private Long id;
+
+    @Column(name = "external_id", unique = true)
+    private String externalId;
 
     @Enumerated(EnumType.STRING)
     private GameType gameType; //sport
@@ -40,6 +41,7 @@ public class Game {
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
     private List<OddsEntry> oddsEntries = new ArrayList<>();
 
+    @Builder
     public Game(GameType gameType, String gameTitle, String homeTeam, String awayTeam, LocalDateTime startTime) {
         this.gameType = gameType;
         this.gameTitle = gameTitle;
