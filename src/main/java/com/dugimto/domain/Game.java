@@ -38,10 +38,19 @@ public class Game {
 
 //    @ElementCollection
 //    @CollectionTable(name = "game_odds", joinColumns = @JoinColumn(name = "game_id"))
-    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OddsEntry> oddsEntries = new ArrayList<>();
 
     @Builder
+    public Game(GameType gameType, String gameTitle, String homeTeam, String awayTeam, LocalDateTime startTime, String externalId) {
+        this.gameType = gameType;
+        this.gameTitle = gameTitle;
+        this.homeTeam = homeTeam;
+        this.awayTeam = awayTeam;
+        this.gameStatus = GameStatus.CREATED;
+        this.startTime = startTime;
+        this.externalId = externalId;
+    }
     public Game(GameType gameType, String gameTitle, String homeTeam, String awayTeam, LocalDateTime startTime) {
         this.gameType = gameType;
         this.gameTitle = gameTitle;
@@ -53,5 +62,11 @@ public class Game {
 
     public void addOddsEntry(OddsEntry oddsEntry) {
         this.oddsEntries.add(oddsEntry);
+    }
+
+    public void updateOddsEntries(List<OddsEntry> oddsEntries) {
+        this.oddsEntries.clear();
+        this.oddsEntries.addAll(oddsEntries);
+        oddsEntries.forEach(oddsEntry -> oddsEntry.updateGame(this));
     }
 }
