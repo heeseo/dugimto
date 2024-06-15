@@ -33,10 +33,10 @@ public class GameController {
         return "redirect:/";
     }
 
-    @GetMapping("/games/new/odds")
-    public String getOdds(Model model) {
-        String odds = oddsApiService.fetchUpcomingAndLiveOdds();
-        log.info("fetched odds: {}", odds);
+    @GetMapping("/games/fetch-external")
+    public String fetchAndSaveOdds() {
+        int savedGames = gameService.fetchAndSaveGamesFromOddsApi();
+        log.info("no. saved games: {}", savedGames);
         return "redirect:/";
     }
 }
