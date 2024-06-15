@@ -39,4 +39,8 @@ public class OddsEntry {
     public void addOutcome(Outcome outcome) {
         this.outcomes.add(outcome);
     }
+
+    public void updateGame(Game game) {
+        this.game = game;
+    }
 }

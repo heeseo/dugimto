@@ -10,5 +10,6 @@ public enum GameType {
     HOCKEY,
     VOLLEYBALL,
     RUGBY,
-    GOLF
+    GOLF,
+    ETC
 }

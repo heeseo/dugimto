@@ -1,28 +1,22 @@
 package com.dugimto.controller;
 
 import com.dugimto.config.WebSecurityConfig;
-import com.dugimto.domain.Game;
 import com.dugimto.domain.GameType;
 import com.dugimto.dto.GameForm;
 import com.dugimto.service.GameService;
-import com.dugimto.service.OddsService;
+import com.dugimto.service.OddsApiService;
 import com.dugimto.service.UserDetailService;
-import org.apache.catalina.security.SecurityConfig;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -43,7 +37,7 @@ class GameControllerTest {
     @MockBean
     private GameService gameService;
     @MockBean
-    private OddsService oddsService;
+    private OddsApiService oddsApiService;
 
     @Test
     @DisplayName("ShouldReturnCreateGameForm")
